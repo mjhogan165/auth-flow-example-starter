@@ -105,15 +105,15 @@ dogController.patch(
 dogController.delete(
   "/dogs/:dogId",
   validateRequest({
-    query: z.object({
+    params: z.object({
       dogId: intParseableString,
     }),
   }),
-  async (req, res, next) => {
+  async (req, res) => {
     await prisma.dog
       .delete({
         where: {
-          id: parseInt(req.query.dogId),
+          id: parseInt(req.params.dogId),
         },
       })
       .then(() => res.status(201).json({ message: "Dog deleted" }))
