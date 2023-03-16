@@ -25,12 +25,30 @@ dogController.post(
   }),
   async (req, res) => {
     const { name, userEmail } = req.body;
-    const dog = await prisma.dog.create({
-      data: {
-        name,
-        userEmail,
-      },
-    });
+    const user = await prisma.user
+      .findFirstOrThrow({
+        where: {
+          email: userEmail,
+        },
+      })
+      .catch(() => null);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const dog = await prisma.dog
+      .create({
+        data: {
+          name,
+          userEmail,
+        },
+      })
+      .catch(() => null);
+
+    if (!dog) {
+      return res.status(500).json({ message: "Dog not created" });
+    }
     return res.json(dog);
   }
 );
@@ -46,12 +64,25 @@ dogController.patch(
         userEmail: z.string().email(),
       })
       .partial(),
-    query: z.object({
+    params: z.object({
       dogId: intParseableString,
     }),
   }),
   async (req, res, next) => {
-    const dogId = parseInt(req.query.dogId);
+    const dogId = parseInt(req.params.dogId);
+
+    const doesDogExist = await prisma.dog
+      .findFirstOrThrow({
+        where: {
+          id: dogId,
+        },
+      })
+      .then(() => true)
+      .catch(() => false);
+
+    if (!doesDogExist) {
+      return res.status(404).json({ message: "Dog not found" });
+    }
 
     return await prisma.dog
       .update({
@@ -62,11 +93,10 @@ dogController.patch(
           ...req.body,
         },
       })
-      .then(() => res.status(201).json({ message: "Dog updated" }))
+      .then((dog) => res.status(201).json({ ...dog }))
       .catch(() =>
         res.status(500).json({ message: "Dog not updated" })
-      )
-      .finally(next);
+      );
   }
 );
 
