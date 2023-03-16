@@ -4,6 +4,7 @@ import { userController } from "./router/user.router";
 import "express-async-errors";
 
 const app = express();
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Hello World");

@@ -9,24 +9,47 @@ const userController = Router();
 // todo
 // Needs _____?
 userController.patch(
-  "/users/:userId",
-  validateRequest({ body: z.object({ email: z.string().email() }) }),
-  async ({ body: { email } }, res) => {
-    try {
-      const updated = await prisma.user.update({
+  "/users/:email",
+  validateRequest({
+    params: z.object({ email: z.string().email() }),
+    body: z.object({ email: z.string().email() }),
+  }),
+  async (
+    { body: { email: bodyEmail }, params: { email: paramsEmail } },
+    res,
+    next
+  ) => {
+    if (paramsEmail === bodyEmail) {
+      return res.status(400).json({
+        message:
+          "Please change your email address to something different than your current email",
+      });
+    }
+    const existingUser = await prisma.user
+      .findFirstOrThrow({
+        where: { email: paramsEmail },
+      })
+      .catch(() => null);
+
+    if (!existingUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return await prisma.user
+      .update({
         where: {
-          email,
+          email: paramsEmail,
         },
         data: {
-          email,
+          email: bodyEmail,
         },
-      });
-      return res.status(201).json({ updated: true });
-    } catch (e) {
-      return res
-        .status(400)
-        .json({ message: "Sorry but that username is taken" });
-    }
+      })
+      .then((user) => res.status(201).json(user))
+      .catch((e) => {
+        console.error(e);
+        res.status(500).json({ message: "Username is taken" });
+      })
+      .finally(next);
   }
 );
 

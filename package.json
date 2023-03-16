@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "dev": "nodemon",
     "seed": "ts-node prisma/seed.ts"
   },
   "devDependencies": {
