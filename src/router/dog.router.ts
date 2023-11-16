@@ -12,7 +12,7 @@ dogController.get("/dogs", async (req, res) => {
   const dogs = await prisma.dog.findMany();
   return res.json(dogs);
 });
-
+//DOG DOG DOG DOG
 // TODO
 // Needs ______?
 dogController.post(
