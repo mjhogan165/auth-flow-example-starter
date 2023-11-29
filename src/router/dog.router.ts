@@ -25,7 +25,6 @@ dogController.post(
   async (req, res) => {
     const { name, userEmail } = req.body;
     const user = await prisma.user
-      .findFirstOrThrow({
         where: {
           email: userEmail,
         },
