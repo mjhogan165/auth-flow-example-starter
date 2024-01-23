@@ -52,7 +52,6 @@ userController.patch(
       .finally(next);
   }
 );
-
 // todo:
 // Needs _____?
 userController.get("/users/:userEmail/dogs", async (req, res) => {
