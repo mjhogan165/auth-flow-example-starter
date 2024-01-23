@@ -4,6 +4,9 @@ import jwt from "jsonwebtoken";
 // const data = {
 //   name: "Jon",
 // };
+
+//so the token really just describes the information inside of it, the secret is really all you need to verify it
+
 const actualJWTToken =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.lj_KZEPZr0UBILb0QAGgZPpPRT2y5qy4gqVw4XdA-F0";
 
