@@ -24,7 +24,6 @@ const seed = async () => {
       passwordHash: await encryptPassword("peter_password"),
     },
   });
-
   // create doomslayer
   const doomslayer = await prisma.dog.create({
     data: {
@@ -39,7 +38,6 @@ const seed = async () => {
       userEmail: jon.email,
     },
   });
-
   // create whiskey
   const whiskey = await prisma.dog.create({
     data: {
