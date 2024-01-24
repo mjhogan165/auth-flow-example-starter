@@ -13,7 +13,7 @@ dogController.get("/dogs", async (req, res) => {
   return res.json(dogs);
 });
 // TODO
-// Needs ______?
+// Needs __Authenticvation____?
 dogController.post(
   "/dogs",
   validateRequest({
